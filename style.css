@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+body {
+    font-family: 'Fredoka', sans-serif;
+    background-color: rgba(90, 54, 237, 1);
+    background: linear-gradient(200deg, rgba(90, 54, 237, 1) 0%, rgba(255, 103, 149, 1) 100%);
+    touch-action: manipulation;
+}
+
+.letter-tile {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.letter-tile:active {
+    transform: scale(0.95);
+}
+
+.letter-tile.selected {
+    background-color: #f472b6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(244, 114, 182, 0.4);
+}
+
+.letter-tile.found {
+    background-color: #4ade80 !important;
+    color: white;
+    animation: pop 0.4s ease-out;
+    pointer-events: none;
+}
+
+.word-item {
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+.word-item.done {
+    text-decoration: line-through;
+    opacity: 0.5;
+    color: #4ade80;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.modal-enter {
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    animation: fall linear forwards;
+    z-index: 100;
+}
+
+@keyframes fall {
+    to { transform: translateY(100vh) rotate(720deg); }
+}
