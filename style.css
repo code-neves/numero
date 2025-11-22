@@ -1,10 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
 
-body {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-family: 'Fredoka', sans-serif;
-    background-color: rgba(90, 54, 237, 1);
+}
+
+body {
     background: linear-gradient(200deg, rgba(90, 54, 237, 1) 0%, rgba(255, 103, 149, 1) 100%);
     touch-action: manipulation;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+    color: #334155;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 28rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.header {
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+}
+
+.grid-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .letter-tile {
@@ -16,11 +69,10 @@ body {
     font-weight: 600;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s;
+    -webkit-user-select: none;
     user-select: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .letter-tile:active {
@@ -41,20 +93,233 @@ body {
     pointer-events: none;
 }
 
-.word-item {
-    transition: all 0.3s ease;
-    opacity: 0;
+.word-list {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
 }
+
+.word-item {
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #334155;
+}
+
 .word-item.done {
     text-decoration: line-through;
     opacity: 0.5;
     color: #4ade80;
 }
 
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 1.5rem;
+    padding: 1rem;
+    width: 100%;
+    max-width: 24rem;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.5s;
+}
+
+.check-icon {
+    width: 5rem;
+    height: 5rem;
+    background-color: #dcfce7;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+
+    & img {
+        width: 100%;
+        height: 100%;
+        border-radius: 9999px;
+        object-fit: cover;
+    }
+}
+
+.modal-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+.number-box {
+    background-color: #f1f5f9;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 2px dashed #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.number-info {
+    text-align: left;
+    overflow: hidden;
+}
+
+.number-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+.number-link {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: underline dotted;
+    text-underline-offset: 4px;
+    white-space: nowrap;
+    background: linear-gradient(to right, #c084fc, #60a5fa, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: opacity 0.2s linear;
+}
+
+.number-link:hover {
+    opacity: 0.8;
+}
+
+.copy-btn {
+    position: relative;
+    flex-shrink: 0;
+    background-color: white;
+    color: #64748b;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s linear;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.125rem;
+}
+
+.copy-btn:hover i {
+    background: linear-gradient(to right, #c084fc, #60a5fa, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+    background-color: #f1f5f9;
+}
+
+.copy-btn:hover::after {
+    content: "Copiar número";
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    color: black;
+    padding: 4px 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.whatsapp-btn {
+    width: 100%;
+    background-color: #25D366;
+    color: white;
+    font-weight: 700;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s linear;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.whatsapp-btn:hover {
+    background-color: #20bd5a;
+}
+
+.whatsapp-btn span {
+    display: inline-block;
+    min-height: 1.2em;
+}
+
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(150%);
+    background: #f1f5f9;
+    color: black;
+    padding: 0.75rem 1.5rem;
+    border-radius: 99px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    z-index: 60;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
 @keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .modal-enter {
@@ -62,19 +327,27 @@ body {
 }
 
 @keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .confetti {
     position: fixed;
     width: 10px;
     height: 10px;
-    background-color: #f00;
     animation: fall linear forwards;
     z-index: 100;
 }
 
 @keyframes fall {
-    to { transform: translateY(100vh) rotate(720deg); }
+    to {
+        transform: translateY(100vh) rotate(720deg);
+    }
 }
